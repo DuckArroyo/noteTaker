@@ -1,13 +1,19 @@
 const express = require("express");
 const path = require("path");
-//const { db } = require("./db/db.json");
+const db = require("./db/db.json"); //just grab the stuff in that .json file!
+console.log(db); //show me db
+console.log(typeof db); //what type of file is db?
 
 const PORT = process.env.PORT || 3001;
 //Initiates server
 const app = express();
 
+app.get("/api/hello", (req, res) => {
+  res.send("Hello! test");
+});
+
 app.get("/api/notes", (req, res) => {
-  res.send("Hello!");
+  res.json(db);
 });
 
 // app.get("/api/notes/:id", (req, res) => {
