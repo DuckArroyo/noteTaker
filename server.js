@@ -59,7 +59,7 @@ function createNewNote(body, dbArray) {
 }
 
 //!commented out becasue of error
-Validates note fields. Only checks for text in fields.
+//Validates note fields. Only checks for text in fields.
 function validateNote(note) {
   if (!db.title || typeof db.title !== "string") {
     return false;
