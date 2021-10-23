@@ -1,9 +1,9 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const db = require("./db/db.json"); //just grab the stuff in that .json file!
-//console.log("Initial import", db); //show me db
-//console.log(typeof db); //what type of file is db?
+const db = require("./db/db.json");
+const router = require("express").Router();
+const store = require("../db/store");
 
 //Setup for a heroku deploy but not actually deployed to heroku.
 const PORT = process.env.PORT || 3001;
@@ -21,8 +21,8 @@ app.get("/api/hello", (req, res) => {
   res.send("Hello! test");
 });
 
-function filterByQuery(query, dbArray) {
-  let filteredResults = dbArray;
+function filterByQuery(query, db) {
+  let filteredResults = db;
   //See comments below for origin of queries
   if (query.noteTitle) {
     filteredResults = filteredResults.filter(
@@ -34,42 +34,49 @@ function filterByQuery(query, dbArray) {
   }
   return filteredResults;
 }
-// noteTitle = document.querySelector('.note-title');
-// noteText = document.querySelector('.note-textarea');
-// saveNoteBtn = document.querySelector('.save-note');
-// newNoteBtn = document.querySelector('.new-note');
-// noteList = document.querySelectorAll('.list-container .list-group');
 
 //f to filter notes by id.
-function findById(id, dbArray) {
-  const result = dbArray.filter((db) => db.id === id)[0];
+function findById(id, db) {
+  const result = db.filter((db) => db.id === id)[0];
   return result;
 }
-// Works in conjuciton with Post Route.
+// Works in conjunction with Post Route.
 // Pushes new Note to array and writes to db.json file
 //!Wrote these passing paraments last night with errors.
-//!do not pass dbArray it is undefined.
-function createNewNote(body) {
+//!do not pass db, it shows as undefined.
+function createNewNote(body, db) {
   console.log("Console of body: ", body);
-  //console.log("Console of dbArray: ", dbArray);
-  const note = body;
-  //dbArray.push(note); //!What should I be passing here?
+  console.log("Console of db: ", db);
+  db.push(body); //!What should I be passing here?
+  console.log("New db after push", db);
   fs.writeFileSync(
     path.join(__dirname, "./db/db.json"),
-    JSON.stringify(note, null, 2) //! {db: dbarray} AskBCS said this was wrong.
+    JSON.stringify(body, null, 2) //! {db: db} AskBCS said this was wrong.
   );
+  console.log("After WriteFile");
+
   return body;
 }
 
 //Outputs the notes. Has a filter by query, dunno why.
-app.get("/api/notes", (req, res) => {
-  let results = db;
-  if (req.query) {
-    results = filterByQuery(req.query, results);
-  }
-  console.log("Query:", req.query);
-  console.log("Console log: ", results);
-  res.json(results);
+// app.get("/api/notes", (req, res) => {
+//   let results = db;
+//   if (req.query) {
+//     results = filterByQuery(req.query, results);
+//   }
+//   console.log("Query:", req.query);
+//   console.log("Console log: ", results);
+//   res.json(results);
+// });
+
+// GET "/api/notes" responds with all notes from the database
+router.get("/notes", (req, res) => {
+  store
+    .getNotes()
+    .then((notes) => {
+      return res.json(notes);
+    })
+    .catch((err) => res.status(500).json(err));
 });
 
 app.get("/api/notes/:id", (req, res) => {
@@ -81,35 +88,31 @@ app.get("/api/notes/:id", (req, res) => {
   }
 });
 
-//!commented out because of error
-app.post("/api/notes", (req, res) => {
-  // set id based on what the next index of the array will be
-  req.body.id = db.length.toString();
-  //I believe I am defining the parameters from index.html and passing them to the db.x to be passed to db.json.
-  // db.title = req.body.noteTitle;
-  // db.text = req.body.noteText;
-  const note = createNewNote(req.body);
-  console.log("Console in route");
-  console.log("Console of note: ", note);
-  console.log("Console of req.body: ", req.body);
+// app.post("/api/notes", (req, res) => {
+//   // set id based on what the next index of the array will be
+//   req.body.id = db.length.toString();
+
+//   const dbArray = [db];
+
+//   const note = createNewNote(req.body, dbArray);
+//   console.log("Console in route");
+//   console.log("Console of note: ", note);
+// });
+
+router.post("/notes", (req, res) => {
+  store
+    .addNote(req.body)
+    .then((note) => res.json(note))
+    .catch((err) => res.status(500).json(err));
 });
 
-//!DELETE
-app.delete("/api/notes/:id", (req, res) => {
-  const deleteNote = db.params.id;
-  if (deleteNote === -1) return res.status(404).json({}); //!What does between curly?
-  notes.splice(deleteNote, 1);
-  res.json(notes);
+// DELETE "/api/notes" deletes the note with an id equal to req.params.id
+router.delete("/notes/:id", (req, res) => {
+  store
+    .removeNote(req.params.id)
+    .then(() => res.json({ ok: true }))
+    .catch((err) => res.status(500).json(err));
 });
-
-//!!Example
-// router.delete('/users/:userId', (req, res) => {
-//   const userIndex = getUserIndex(req.params.userId)
-//   if (userIndex === -1) return res.status(404).json({})
-//   users.splice(userIndex, 1)
-//   res.json(users)
-//  })
-// https://www.tabnine.com/code/javascript/functions/express/Router/delete
 
 //Creates connection to the root route of the server
 app.get("/", (req, res) => {
