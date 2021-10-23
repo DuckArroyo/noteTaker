@@ -10,6 +10,8 @@ const PORT = process.env.PORT || 3001;
 //Initiates server
 const app = express();
 
+//Express middleware - instructs server to use files in public.
+app.use(express.static("public"));
 // parse incoming string or array data
 app.use(express.urlencoded({ extended: true }));
 // parse incoming JSON data
@@ -89,19 +91,45 @@ app.get("/api/notes/:id", (req, res) => {
 });
 
 //!commented out becasue of error
-// app.post("/api/notes", (req, res) => {
-//   // set id based on what the next index of the array will be
-//   req.body.id = db.length.toString();
-//   if (!validateAnimal(req.body)) {
-//     res.status(400).send("The note is incomplete.");
-//   } else {
-//     const note = createNewNote(req.body, db);
-//     res.json(req.body);
-//   }
-// });
+app.post("/api/notes", (req, res) => {
+  // set id based on what the next index of the array will be
+  req.body.id = db.length.toString();
+  //   if (!validateAnimal(req.body)) {
+  //     res.status(400).send("The note is incomplete.");
+  //   } else {
+  const note = createNewNote(req.body, db);
+  res.json(req.body);
+  //   }
+});
+
+//!DELETE
+app.delete("/api/notes/:id", (req, res) => {
+  const deleteNote = db.params.id;
+  if (deleteNote === -1) return res.status(404).json({}); //!What does between curly?
+  notes.splice(deleteNote, 1);
+  res.json(notes);
+});
+
+//!!Example
+// router.delete('/users/:userId', (req, res) => {
+//   const userIndex = getUserIndex(req.params.userId)
+//   if (userIndex === -1) return res.status(404).json({})
+//   users.splice(userIndex, 1)
+//   res.json(users)
+//  })
+// https://www.tabnine.com/code/javascript/functions/express/Router/delete
+
+//Creates connection to the root route of the server
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "./public/index.html"));
+});
 
 app.get("/index", (req, res) => {
   res.sendFile(path.join(__dirname, "./public/index.html"));
+});
+
+app.get("/notes", (req, res) => {
+  res.sendFile(path.join(__dirname, "./public/notes.html"));
 });
 
 app.get("*", (req, res) => {
