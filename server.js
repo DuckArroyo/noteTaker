@@ -59,16 +59,16 @@ function createNewNote(body, dbArray) {
 }
 
 //!commented out becasue of error
-//Validates note fields. Only checks for text in fields.
-// function validateNote(note) {
-//   if (!db.title || typeof db.title !== "string") {
-//     return false;
-//   }
-//   if (!db.text || typeof db.text !== "string") {
-//     return false;
-//   }
-//   return true;
-// }
+Validates note fields. Only checks for text in fields.
+function validateNote(note) {
+  if (!db.title || typeof db.title !== "string") {
+    return false;
+  }
+  if (!db.text || typeof db.text !== "string") {
+    return false;
+  }
+  return true;
+}
 
 //Outputs the notes. Has a filter by query, dunno why.
 app.get("/api/notes", (req, res) => {
@@ -90,16 +90,16 @@ app.get("/api/notes/:id", (req, res) => {
   }
 });
 
-//!commented out becasue of error
+//!commented out because of error
 app.post("/api/notes", (req, res) => {
   // set id based on what the next index of the array will be
   req.body.id = db.length.toString();
-  //   if (!validateAnimal(req.body)) {
-  //     res.status(400).send("The note is incomplete.");
-  //   } else {
-  const note = createNewNote(req.body, db);
-  res.json(req.body);
-  //   }
+  if (!validateAnimal(req.body)) {
+    res.status(400).send("The note is incomplete.");
+  } else {
+    const note = createNewNote(req.body, db);
+    res.json(req.body);
+  }
 });
 
 //!DELETE
