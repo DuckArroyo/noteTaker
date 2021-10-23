@@ -1,4 +1,5 @@
 const express = require("express");
+const fs = require("fs");
 const path = require("path");
 const db = require("./db/db.json"); //just grab the stuff in that .json file!
 //console.log("Initial import", db); //show me db
@@ -45,9 +46,12 @@ function findById(id, dbArray) {
 
 function createNewNote(body, dbArray) {
   console.log(body);
-  // our function's main code will go here!
-
-  // return finished code to post route for response
+  const note = body;
+  dbArray.push(note);
+  fs.writeFileSync(
+    path.join(__dirname, "./db/db.json"),
+    JSON.stringify({ db: dbArray }, null, 2)
+  );
   return body;
 }
 
@@ -73,12 +77,12 @@ app.get("/api/notes/:id", (req, res) => {
 
 app.post("/api/notes", (req, res) => {
   // set id based on what the next index of the array will be
-  //req.body.id = db.length.toString();
-  console.log(req.body);
+  req.body.id = db.length.toString();
+  //console.log(req.body);
   //if (!validateAnimal(req.body)) {
   //  res.status(400).send("The note is incomplete.");
   //} else {
-  //const note = createNewNote(req.body, db);
+  const note = createNewNote(req.body, db);
   res.json(req.body);
   //}
 });
