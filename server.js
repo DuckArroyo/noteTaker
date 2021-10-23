@@ -43,7 +43,8 @@ function findById(id, dbArray) {
   const result = dbArray.filter((db) => db.id === id)[0];
   return result;
 }
-
+// Works in conjuciton with Post Route.
+// Pushes new Note to array and writes to db.json file
 function createNewNote(body, dbArray) {
   console.log(body);
   const note = body;
@@ -54,6 +55,18 @@ function createNewNote(body, dbArray) {
   );
   return body;
 }
+
+//!commented out becasue of error
+//Validates note fields. Only checks for text in fields.
+// function validateNote(note) {
+//   if (!db.title || typeof db.title !== "string") {
+//     return false;
+//   }
+//   if (!db.text || typeof db.text !== "string") {
+//     return false;
+//   }
+//   return true;
+// }
 
 //Outputs the notes. Has a filter by query, dunno why.
 app.get("/api/notes", (req, res) => {
@@ -75,25 +88,17 @@ app.get("/api/notes/:id", (req, res) => {
   }
 });
 
-app.post("/api/notes", (req, res) => {
-  // set id based on what the next index of the array will be
-  req.body.id = db.length.toString();
-  //console.log(req.body);
-  //if (!validateAnimal(req.body)) {
-  //  res.status(400).send("The note is incomplete.");
-  //} else {
-  const note = createNewNote(req.body, db);
-  res.json(req.body);
-  //}
-});
-
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "./public/index.html"));
-});
-
-app.get("/notes", (req, res) => {
-  res.sendFile(path.join(__dirname, "./public/notes.html"));
-});
+//!commented out becasue of error
+// app.post("/api/notes", (req, res) => {
+//   // set id based on what the next index of the array will be
+//   req.body.id = db.length.toString();
+//   if (!validateAnimal(req.body)) {
+//     res.status(400).send("The note is incomplete.");
+//   } else {
+//     const note = createNewNote(req.body, db);
+//     res.json(req.body);
+//   }
+// });
 
 app.get("/index", (req, res) => {
   res.sendFile(path.join(__dirname, "./public/index.html"));
