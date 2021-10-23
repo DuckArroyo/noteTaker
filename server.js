@@ -47,27 +47,18 @@ function findById(id, dbArray) {
 }
 // Works in conjuciton with Post Route.
 // Pushes new Note to array and writes to db.json file
-function createNewNote(body, dbArray) {
-  console.log(body);
+//!Wrote these passing paraments last night with errors.
+//!do not pass dbArray it is undefined.
+function createNewNote(body) {
+  console.log("Console of body: ", body);
+  //console.log("Console of dbArray: ", dbArray);
   const note = body;
-  dbArray.push(note);
+  //dbArray.push(note); //!What should I be passing here?
   fs.writeFileSync(
     path.join(__dirname, "./db/db.json"),
-    JSON.stringify({ db: dbArray }, null, 2)
+    JSON.stringify(note, null, 2) //! {db: dbarray} AskBCS said this was wrong.
   );
   return body;
-}
-
-//!commented out becasue of error
-//Validates note fields. Only checks for text in fields.
-function validateNote(note) {
-  if (!db.title || typeof db.title !== "string") {
-    return false;
-  }
-  if (!db.text || typeof db.text !== "string") {
-    return false;
-  }
-  return true;
 }
 
 //Outputs the notes. Has a filter by query, dunno why.
@@ -94,12 +85,13 @@ app.get("/api/notes/:id", (req, res) => {
 app.post("/api/notes", (req, res) => {
   // set id based on what the next index of the array will be
   req.body.id = db.length.toString();
-  if (!validateAnimal(req.body)) {
-    res.status(400).send("The note is incomplete.");
-  } else {
-    const note = createNewNote(req.body, db);
-    res.json(req.body);
-  }
+  //I believe I am defining the parameters from index.html and passing them to the db.x to be passed to db.json.
+  // db.title = req.body.noteTitle;
+  // db.text = req.body.noteText;
+  const note = createNewNote(req.body);
+  console.log("Console in route");
+  console.log("Console of note: ", note);
+  console.log("Console of req.body: ", req.body);
 });
 
 //!DELETE
