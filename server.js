@@ -1,5 +1,6 @@
 const express = require("express");
 const fs = require("fs");
+const util = "util";
 const path = require("path");
 const db = require("./db/db.json");
 
@@ -14,10 +15,6 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 // parse incoming JSON data
 app.use(express.json());
-
-app.get("/api/hello", (req, res) => {
-  res.send("Hello! test");
-});
 
 function filterByQuery(query, db) {
   let filteredResults = db;
@@ -39,31 +36,32 @@ function findById(id, db) {
   return result;
 }
 
+//!readCurrentDb is not working. It is declared above.
+// const readCurrentDb = fs.readFile("./db/db.json", "utf-8", function (data) {
+//   console.log(readCurrentDb);
+//   console.log(data);
+// });
+
 function createNewNote(body) {
-  //const readFile =
-  const dba = fs.readFile("./db", function (data) {
-    console.log(data);
-  });
+  //!readCurrentDb goes here.
 
-  //adapting will remove teh need to pass db.
-  //readfile ascyn /db/db.json //!look at get notes.
-  //parse it
+  console.log("Console of body: ", body);
+  //console.log("Console of readCurrentDb: ", readCurrentDb);
+  db.push(body);
+  console.log("New db after push", db);
+  fs.writeFileSync(
+    path.join(__dirname, "./db/db.json"),
+    JSON.stringify(db, null, 2)
+  );
+  console.log("After WriteFile");
+  console.log("Log of stringified db:", db);
 
-  ///then they add Notes. READ IT
-  //Parse it.
-
-  // console.log("Console of body: ", body);
-  // console.log("Console of db: ", dba);
-  // db.push(body);
-  // console.log("New db after push", db);
-  // fs.writeFileSync(
-  //   path.join(__dirname, "./db/db.json"),
-  //   JSON.stringify(body, null, 2) //! {db: db} AskBCS said this was wrong.
-  // );
-  // console.log("After WriteFile");
-
-  // return body;
+  return db;
 }
+
+app.get("/api/hello", (req, res) => {
+  res.send("Hello! test");
+});
 
 //Outputs the notes. Has a filter by query, dunno why.
 app.get("/api/notes", (req, res) => {
@@ -89,8 +87,11 @@ app.post("/api/notes", (req, res) => {
   // set id based on what the next index of the array will be
   req.body.id = db.length.toString();
   const dbArray = [db];
+  console.log("Console of dbArray in api route: ", dbArray); // db in []
+  console.log("Console of req.body in api route: ", req.body); //Input from insomnia
   const note = createNewNote(req.body, dbArray);
-  console.log("Console of note: ", note);
+  res.json(note); //!Currently showing as undefined
+  console.log("Console of note in api route: ", note);
 });
 
 //Creates connection to the root route of the server
