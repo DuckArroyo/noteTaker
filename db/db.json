@@ -1,7 +1,7 @@
 [
   {
-    "title": "Start Title",
-    "text": "Start Text"
+    "title": "Welcome, read me",
+    "text": "Welcome to the notepad, to start a new note click the + on the upper right corner, then type a title for your note and the content for your note."
   },
   {
     "title": "Test Title",
@@ -12,10 +12,5 @@
     "title": "Test Title2",
     "text": "Text Test2",
     "id": "2"
-  },
-  {
-    "title": "htegrwefwd",
-    "text": "wgefwd",
-    "id": "3"
   }
 ]

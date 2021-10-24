@@ -98,11 +98,11 @@ app.delete("api/notes/:id", (req, res) => {
   console.log(req.body);
   console.log(req.body.id);
   console.log(req.params.id);
-  return req.params.id;
-  console.log(req.params.id);
-  //req.params.id = ${id}
-  //console.log(req.params.id);
-  res.status(500).json(err);
+  // return req.params.id;
+  // console.log(req.params.id);
+  // req.params.id = ${id}
+  // console.log(req.params.id);
+  // res.status(500).json(err);
 });
 
 //Creates connection to the root route of the server
