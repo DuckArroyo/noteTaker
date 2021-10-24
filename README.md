@@ -14,6 +14,7 @@ Module 11 assignment debrief:
 
 - pending - Deployed to live URL.
 - Deploys with no errors.
+- Heroku link https://still-sands-24648.herokuapp.com/
 - Link to live application https://duckarroyo.github.io/challenge11/
 - Link to repo https://github.com/DuckArroyo/challenge11
 
