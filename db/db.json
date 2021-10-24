@@ -12,5 +12,10 @@
     "title": "Test Title2",
     "text": "Text Test2",
     "id": "2"
+  },
+  {
+    "title": "A Full note",
+    "text": "Stories of a duck",
+    "id": "3"
   }
 ]
