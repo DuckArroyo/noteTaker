@@ -13,7 +13,7 @@ Module 11 assignment
 
 ## Links
 
-[Github Pages](https://duckarroyo.github.io/noteTaker){:target="_blank"}
+[Github Pages](https://duckarroyo.github.io/noteTaker {:target="_blank"})
 
 [Github Repository](https://github.com/DuckArroyo/noteTaker){:target="_blank"}
 
