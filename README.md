@@ -13,11 +13,11 @@ Module 11 assignment
 
 ## Links
 
-[Github Pages](https://duckarroyo.github.io/noteTaker {:target="_blank"})
+[Github Pages](https://duckarroyo.github.io/noteTaker)
 
-[Github Repository](https://github.com/DuckArroyo/noteTaker){:target="_blank"}
+[Github Repository](https://github.com/DuckArroyo/noteTaker)
 
-[Heroku](https://still-sands-24648.herokuapp.com/){:target="_blank"}
+[Heroku](https://still-sands-24648.herokuapp.com/)
 
 ## Required installations for code duplication
 
